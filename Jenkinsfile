@@ -6,7 +6,7 @@ pipeline {
   // ========================================================================== //
 
 
-  agent { label "DockerAgent" }
+  agent any
 
   // ========================================================================== //
   //                                 O p t i o n s
@@ -28,26 +28,32 @@ pipeline {
   environment {
 
     // Repository configuration
-    APP_PROJECT = 'cms-wbv'
-    APP_CODE = 'cms-wbv-admin-app'
-    APP_REPO_URL = 'http://10.100.116.37:8080/cms-wooribank-vn/cms-wbv-admin-app.git'
-    APP_REPO_BRANCH = 'develop'
-    APP_REPO_CREDENTIALS = 'token-gitlab-key'
+    APP_PROJECT = 'dotiendat1751998'
+    APP_CODE = 'devopsmater'
+    APP_REPO_URL = 'git@github.com:tiendat1751998/DevOpsMaster.git'
+    APP_REPO_BRANCH = 'master'
+    APP_REPO_CREDENTIALS = 'cms-git-key'
 
     //Deployment configuration
     DEPLOY_ENV = 'dev'
     DEPLOY_AGENT = 'MasterNode'
 
-    SERVICE_PORT_PUBLISH = '9101'
+    SERVICE_PORT_PUBLISH = '8087'
     SERVICE_PORT_LOCAL = '8080'
     SERVICE_NAME = "$DEPLOY_ENV-$APP_CODE"
     SERVICE_ARGS = "-e SPRING_PROFILES_ACTIVE=$DEPLOY_ENV -e SERVER_PORT=$SERVICE_PORT_LOCAL -e SERVER_SERVLET_CONTEXT_PATH=/ -e JAVA_OPTS=-Djava.net.preferIPv4Stack=true"
+    SERVICE_MEM_LIMIT = '1g'
 
     //Source code folder
     SOURCE_FOLDER = 'source-code'
     DEVOPS_FOLDER = "$APP_CODE"
 
+    //Logs folder
+    LOGS_FOLDER = '/home/InfoCMS/logs/api_app'
+    LOGS_SOURCE = '/usr/local/InfoCMS/was/logs'
+
     //Build configuration
+    //  need import image to docker
     BUILD_IMAGE = 'gradle:7.1-jdk8'
     BUILD_COMMAND = 'gradle clean build -i --build-cache --no-daemon -x test'
     BUILD_CACHE = "devops-cache-gradle-$APP_PROJECT-$APP_CODE:/home/gradle/.gradle"
@@ -127,7 +133,7 @@ pipeline {
 
         timeout(time: 15, unit: 'MINUTES') {
           dir("$SOURCE_FOLDER") {
-            sh "docker run --rm --name $DOCKER_BUILDER_NAME --network devops --volumes-from devops-jenkins-inbound-agent-docker -v $BUILD_CACHE:cached -w \"\$(pwd)\" $BUILD_IMAGE $BUILD_COMMAND"
+            sh "docker run --rm --name $DOCKER_BUILDER_NAME --network devops --volumes-from devops-jenkins -v $BUILD_CACHE:cached -w \"\$(pwd)\" $BUILD_IMAGE $BUILD_COMMAND"
             sh "$BUILD_CHECK_CMD"
           }
         }
@@ -187,7 +193,8 @@ pipeline {
         milestone(ordinal: null, label: "Milestone: Docker Build")
         timeout(time: 60, unit: 'MINUTES') {
           dir("$SOURCE_FOLDER") {
-            sh "docker run --rm --name $DOCKER_BUILDER_NAME --network devops --volumes-from devops-jenkins-inbound-agent-docker -w \"\$(pwd)\" docker:latest docker build -t $DOCKER_IMAGE:$DOCKER_TAG -t $DOCKER_IMAGE:latest --build-arg=BUILDKIT_INLINE_CACHE=1 --cache-from $DOCKER_IMAGE:latest ."
+       //     sh "docker build -t $DOCKER_IMAGE:$DOCKER_TAG -t $DOCKER_IMAGE:latest --build-arg=BUILDKIT_INLINE_CACHE=1 --cache-from $DOCKER_IMAGE:latest ."
+              sh "docker build -t $DOCKER_IMAGE:latest --build-arg=BUILDKIT_INLINE_CACHE=1 --cache-from $DOCKER_IMAGE:latest ."
           }
         }
       }
@@ -212,7 +219,8 @@ pipeline {
               } catch (Exception e) {
                   echo "An exception occurred: ${e.message}"
               }
-              sh "docker run -d --network cms-wbv --name $SERVICE_NAME -p $SERVICE_PORT_PUBLISH:$SERVICE_PORT_LOCAL $SERVICE_ARGS $DOCKER_IMAGE:$DOCKER_TAG"
+              sh "docker run -d --network cms-wbv --name $SERVICE_NAME --memory=$SERVICE_MEM_LIMIT -p $SERVICE_PORT_PUBLISH:$SERVICE_PORT_LOCAL -v $LOGS_FOLDER:$LOGS_SOURCE $SERVICE_ARGS $DOCKER_IMAGE:$DOCKER_TAG"
+
             }
           }
         }
@@ -247,8 +255,9 @@ pipeline {
 
   post {
     always {
-      echo 'Always'
+      // Clean workspace
       cleanWs()
+      echo 'Always'
     }
     success {
       echo 'SUCCESS!'
