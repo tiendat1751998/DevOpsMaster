@@ -63,15 +63,15 @@
 <!--                    <compilerArgs>&#45;&#45;enable-preview</compilerArgs>-->
 <!--                </configuration>-->
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-<!--                <configuration>-->
-<!--                    <source>16</source>-->
-<!--                    <target>16</target>-->
-<!--                    <compilerArgs>&#45;&#45;enable-preview</compilerArgs>-->
-<!--                </configuration>-->
-            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-compiler-plugin</artifactId>-->
+<!--&lt;!&ndash;                <configuration>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <source>16</source>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <target>16</target>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <compilerArgs>&#45;&#45;enable-preview</compilerArgs>&ndash;&gt;-->
+<!--&lt;!&ndash;                </configuration>&ndash;&gt;-->
+<!--            </plugin>-->
         </plugins>
     </build>
 
