@@ -273,22 +273,67 @@
 pipeline {
     agent any
 
+    parameters {
+        booleanParam(name: 'RELEASE', defaultValue: false, description: 'Is this a Release Candidate?')
+    }
+
+    environment {
+        RELEASE_VERSION = '1.1.0'
+        INT_VERSION = 'R2'
+    }
     stages {
+        stage('Audit tools') {
+            steps {
+                sh '''
+                  git version
+                  java -version
+                  mvn -version
+                '''
+            }
+        }
+
+        stage('Unit Test') {
+            steps {
+                {
+                    sh '''
+                        echo "Executing Unit Tests..."
+                        mvn test
+                    '''
+                }
+            }
+        }
+
         stage('Build') {
+            environment {
+                VERSION_SUFFIX = "${sh(script:'if [ "${RELEASE}" = false ] ; then echo -n "${INT_VERSION}"ci:"${BUILD_NUMBER}"; else echo -n "${RELEASE_VERSION}":"${BUILD_NUMBER}"; fi', returnStdout: true)}"
+            }
             steps {
-                sh 'mvn clean package'
+                echo "Building version: ${INT_VERSION} with suffix: ${VERSION_SUFFIX}"
+                echo 'Mention your Application Build Code here!!!'
+           {
+                        sh '''
+                            mvn versions:set -DnewVersion="${VERSION_SUFFIX}"-SNAPSHOT
+                            mvn versions:update-child-modules
+                            mvn clean package
+                        '''
+                }
             }
         }
-        stage('Test') {
+
+        stage('Publish') {
+            when {
+                expression { return params.RELEASE }
+            }
+
             steps {
-                sh 'mvn test'
+                archiveArtifacts('**/*.war')
             }
         }
-        stage('Deploy') {
-            steps {
-                // Deployment steps can go here
-                echo 'Deploying application...'
-            }
+    }
+
+    post {
+        always {
+            cleanWs()
         }
     }
 }
