@@ -294,12 +294,12 @@ pipeline {
 
         stage('Unit Test') {
             steps {
-                {
-                    sh '''
-                        echo "Executing Unit Tests..."
-                        mvn test
-                    '''
-                }
+
+                sh '''
+                    echo "Executing Unit Tests..."
+                    mvn test
+                '''
+
             }
         }
 
@@ -310,13 +310,13 @@ pipeline {
             steps {
                 echo "Building version: ${INT_VERSION} with suffix: ${VERSION_SUFFIX}"
                 echo 'Mention your Application Build Code here!!!'
-           {
-                        sh '''
-                            mvn versions:set -DnewVersion="${VERSION_SUFFIX}"-SNAPSHOT
-                            mvn versions:update-child-modules
-                            mvn clean package
-                        '''
-                }
+
+                sh '''
+                    mvn versions:set -DnewVersion="${VERSION_SUFFIX}"-SNAPSHOT
+                    mvn versions:update-child-modules
+                    mvn clean package
+                '''
+
             }
         }
 
