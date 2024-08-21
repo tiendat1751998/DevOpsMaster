@@ -15,8 +15,8 @@ pipeline {
       stage('Audit tools') {
         steps {
           sh '''
-              java -version
-              mvn -version
+              java --version
+              mvn --version
           '''
           sh 'printenv'
           sh 'ls -l $WORKSPACE'
