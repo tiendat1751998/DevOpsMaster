@@ -326,7 +326,7 @@ pipeline {
             }
 
             steps {
-                archiveArtifacts('**/*.war')
+                archiveArtifacts('**/*.jar')
             }
         }
     }
