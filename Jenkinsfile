@@ -271,7 +271,7 @@
 //   }
 // }
 pipeline {
-    agent any
+    agent slave-jenkins
 
     parameters {
         booleanParam(name: 'RELEASE', defaultValue: false, description: 'Is this a Release Candidate?')
