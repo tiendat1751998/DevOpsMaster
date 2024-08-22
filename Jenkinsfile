@@ -271,7 +271,7 @@
 //   }
 // }
 pipeline {
-    agent any
+    agent {label 'slave'}
 
     parameters {
         booleanParam(name: 'RELEASE', defaultValue: false, description: 'Is this a Release Candidate?')
