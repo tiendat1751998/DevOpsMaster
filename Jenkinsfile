@@ -271,7 +271,7 @@
 //   }
 // }
 pipeline {
-    agent {label 'slave'}
+    agent {label 'slave-master-note'}
 
     parameters {
         booleanParam(name: 'RELEASE', defaultValue: false, description: 'Is this a Release Candidate?')
