@@ -1,0 +1,31 @@
+docker container run --publish 80:80 nginx:latest
+
+docker container ls
+docker ps  (old way)
+
+docker container run --publish 8080 -- detach --name jenkinstest jenkins:latest
+
+docker container top jenkinstest
+ps -edf | grep nginx
+
+mức tiêu thụ tài nguyên container
+
+docker stats jenkinstest
+
+lấy thông tin docker
+
+docker inspect jenkinstest
+
+ vào trong container
+
+
+ docker run -it jenkinstest /bin/bash
+
+
+ docker exec -it jenkins test /bin/bash
+
+
+ login to mysql by docker
+ docker exec -it mysql-dk mysql -uroot -p
+
+
