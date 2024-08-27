@@ -1,0 +1,23 @@
+version: '3.9'
+services:
+  mariadb:
+    image: mariadb
+    container_name: mariadb
+    environment:
+      - TZ=Asia/Ho_Chi_Minh
+      - MARIADB_DATABASE=workpress
+      - MARIADB_ROOT_PASSWORD=Adm1n123*
+      - MARIADB_USER=admin
+      - MARIADB_PASSWORD=Adm1n123*
+    ports:
+      - "3306:3306"
+    networks:
+      - mynetwork
+    volumes:
+      'mysql_data:/var/lib/mysql'
+    restart: always
+networks:
+  mynetwork:
+    driver: bridge
+volumes:
+  mariadb:

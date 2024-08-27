@@ -1,0 +1,30 @@
+version: '3.9'
+services:
+  wordpress:
+    image: wordpress:5.1.1-fpm-alpine
+    container_name: wordpress
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - WORDPRESS_DB_HOST=mariadb
+      - WORDPRESS_DB_USER=root
+      - WORDPRESS_DB_PASSWORD=Adm1n123*
+      - WORDPRESS_DB_NAME=wordpress
+    ports:
+      - "8088:80"
+    volumes:
+      - /docker/wordpress:/var/www/html
+    networks:
+      - mynetwork
+volumes:
+#  certbot-etc:
+  wordpress:
+#  dbdata:
+
+networks:
+  mynetwork:
+    driver: bridge
+# docker compose -f  docker.yml up -d db
+
+
+

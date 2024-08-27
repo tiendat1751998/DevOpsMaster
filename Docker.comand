@@ -29,3 +29,6 @@ docker inspect jenkinstest
  docker exec -it mysql-dk mysql -uroot -p
 
 
+ docker run   -d -e  MARIADB_USER=admin -e MARIADB_PASSWORD=Adm1n123* -e MARIADB_DATABASE=workpress -e MARIADB_ROOT_PASSWORD=Adm1n123* -p 3306:3306 -v /docker/mariadb:/var/www/html --network mynetwork --name mariadb mariadb
+
+   docker run -d -e WORDPRESS_DB_HOST=mariadb -e WORDPRESS_DB_NAME=workpress  -e WORDPRESS_DB_USER=admin -e WORDPRESS_DB_PASSWORD=Adm1n123* -p 8080:80 --network mynetwork -v /docker/wordpress:/var/www/html --name wordpress wordpress
