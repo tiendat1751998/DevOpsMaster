@@ -48,3 +48,8 @@ docker container run -d --name nginxbind --mount type=bind,source=$(pwd),target=
 
 
 git clone https://github.com/anshulc55/Docker_for_DevOps.git
+
+docker compose logs serivceName
+
+docker logs -f  --tail=5 jenkins
+docker composer exec servicenamae<sheel>
