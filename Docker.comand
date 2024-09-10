@@ -55,6 +55,43 @@ docker logs -f  --tail=5 jenkins
 docker composer exec servicenamae<sheel>
 
 
+-- Create Docker Service
+ docker service create --replicas 2 <image>
+
+
+
+ update - scale up the services
+
+docker service update <service_name> - -replicas <Number of Services>
+
+create note docker swarm
+➢ Get Token at runtime:
+docker swarm join-token manager
+
+➢ Switch Manager Node in Docker
+
+docker node update - -role manager <node_name>
+
+➢ Create Docker Service with Replicas
+
+docker service create --replicas <Number of Replica> <Image> <Command>
+
+Verify Which Node is running, which containers
+
+docker service ps <service_name>
+
+Docker Swarm visualizer
+
+docker stack deploy -c docker-compose.yml visualizer
+
+docker network create -d overlay myNetwork
+
+docker service create --name postgress --network myNetwork -e POSTGRES_PASSWORD=myPass postgres
+
+
+docker service create --name drupal --network  myNetwork -p 8080:80 drupal 
+
+
 --volume
  docker container run --name mysqldb -e ""
 
