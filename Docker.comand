@@ -57,3 +57,20 @@ docker composer exec servicenamae<sheel>
 
 --volume
  docker container run --name mysqldb -e ""
+
+ ---docker swarm
+
+ docker node update --lable-add=region=east-1-d
+
+docker service create --constraint=node.labels.region==east-1-d postgres
+docker service update --constraint-rm=node.labels.region==east-1-d --constraint-add=node.labels.region==worker postgres
+
+
+-- docker scale
+ docker service scale pythonDevOps=2
+
+
+ docker stack deploy -c dokcer.yml DevOpsMaster
+
+
+
